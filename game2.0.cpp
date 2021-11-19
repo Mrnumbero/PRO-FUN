@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS 1
+ 
 #include <iostream>
 #include <stdio.h>
 #include <windows.h>
@@ -6,8 +6,8 @@
 #include <vector>
 #include<conio.h>
 #include<time.h>
-#define screen_x 40
-#define screen_y 80
+#define screen_x 80
+#define screen_y 40
 
 FILE* fp;
 using namespace std;
@@ -98,15 +98,18 @@ void white_dot()
 
 void gold_drop()
 {
-	for (int x = 0;x < 38;x++) {
-		for (int y = 0;y < 26;y++) {
-
-			if (map[y][x] == '.') {
+	int x=0;
+	int y=0;
+	for(int i=0;i<=100;i++)
+	{
+		x = (rand() % 36) + 1;
+		y = (rand() % 26) + 1;
+			if (map[y][x] == '.')
+			{
 				gotoxy(x, y); setcolor(14, 0);printf("0");setcolor(7, 0);
 				map[y][x] = '0';
 			}
 
-		}
 	}
 
 
@@ -114,12 +117,15 @@ void gold_drop()
 
 void header()
 {
+	 
 	printf("\n\n\n");
 	printf("     iiiiii        h      h          a         tttttttt   eeeeee\n");
 	printf("       ii          h      h       a     a         tt      e\n");
 	printf("       ii          hhhhhhhh      aaaaaaaaa        tt      eeeeee      ");setcolor(4, 0);printf("\'F\'\n");setcolor(7, 0);
 	printf("       ii          h      h      a       a        tt      e\n");
 	printf("     iiiiii        h      h      a       a        tt      eeeeee\n");
+	setcolor(7, 0);
+	gotoxy(50,37);printf("Sitthi Nawamawat 64011301");
 }
 
 
@@ -137,6 +143,7 @@ void enemy(int x)
 {
 	setcolor(x, 0); printf("F"); setcolor(7, 0);
 }
+ 
 
 void readfile()
 {
@@ -183,6 +190,45 @@ void writefile()
 	}
 	readcount = 0;
 	fclose(fp);
+}
+
+void scoreboard()
+{
+	setcolor(rand() % 9 + 1, 0);
+	for(int y=0;y<=15;y++)
+	{
+		gotoxy(45+y,5);printf("_");
+		gotoxy(45+y,22);printf("_");
+	}
+	for(int x=0;x<=16;x++)
+	{
+		gotoxy(44,6+x);printf("|");
+		gotoxy(61,6+x);printf("|");
+	}
+	gotoxy(48, 7);
+	
+    printf("Top 5 score");
+    for (int i = 0; i < 5; i++)
+    {
+        gotoxy(46, 9 + 3 * i);
+        printf(" %d. %s    %d\n\n", i + 1, player[i].playername, player[i].playerscore);
+    }
+    
+    setcolor(6,0);
+	gotoxy(40,25);printf("Press \" x \" for exit the game. ");
+	setcolor(7, 0);
+}
+
+void setfont(int x,int y)
+{
+    int newWidth = x, newHeight = y;
+    CONSOLE_FONT_INFOEX fontStructure = {0};
+    fontStructure.cbSize = sizeof(fontStructure);
+    fontStructure.dwFontSize.X = newWidth;
+    fontStructure.dwFontSize.Y = newHeight;
+    wcscpy(fontStructure.FaceName, L"Courier New");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetCurrentConsoleFontEx(hConsole, true, &fontStructure);
 }
 
 class entity {
@@ -296,8 +342,8 @@ int main()
 	int ey = 1;
 	int ox=0, oy=0, o2x=0, o2y=0, o3x=0, o3y=0;
 	int ch = '.';
-	char name[20];
-	int pts = 0;
+ 
+	int pts = 990;
 	int color = 7;
 	int color_e = 4;
 	int speedmod = 4;
@@ -307,7 +353,7 @@ int main()
     setConsole(screen_x, screen_y);
 
 	header();
-	gotoxy(50,37);printf("Sitthi Nawamawat 64011301");
+	
 	
 	readfile();
 	gotoxy(30,12);printf("ENTER NAME : ");
@@ -341,7 +387,7 @@ int main()
 				else
 					if (map[y][x - 1] == ' ') x--;
 				else
-					if (map[y][x - 1] == 'a') { x--; pts = pts + 5; }
+					if (map[y][x - 1] == 'a') { x--; pts = pts + 5; ax = 0; ay = 0;}
 				else
 					if (map[y][x - 1] == '0') { x--; pts = pts + 50; }
 			}
@@ -350,7 +396,7 @@ int main()
 				else
 					if (map[y + 1][x] == ' ') y++;
 				else
-					if (map[y + 1][x] == 'a') { y++; pts = pts + 5; }
+					if (map[y + 1][x] == 'a') { y++; pts = pts + 5; ax = 0; ay = 0; }
 				else
 					if (map[y + 1][x] == '0') { y++; pts = pts + 50; }
 			}
@@ -359,7 +405,7 @@ int main()
 				else
 					if (map[y - 1][x] == ' ') y--;
 				else
-					if (map[y - 1][x] == 'a') { y--; pts = pts + 5; }
+					if (map[y - 1][x] == 'a') { y--; pts = pts + 5; ax = 0; ay = 0;}
 				else
 					if (map[y - 1][x] == '0') { y--; pts = pts + 50; }
 			}
@@ -368,7 +414,7 @@ int main()
 				else
 					if (map[y][x + 1] == ' ') x++;
 				else
-					if (map[y][x + 1] == 'a') { x++; pts = pts + 5; }
+					if (map[y][x + 1] == 'a') { x++; pts = pts + 5; ax = 0; ay = 0;}
 				else
 					if (map[y][x + 1] == '0') { x++; pts = pts + 50; }
 			}
@@ -468,26 +514,35 @@ int main()
 		if (pts >= 200 && pts <= 1000) {
 			int speed2;
 			speed2 = pts % 220;
-			if (speed2 == 0) {
+			for(int z=0;z<=20;z++){
+			if (speed2 == 0+z) {
 				speedmod = 4;
+			}
 			}
 		}
 
-		if (pts > 2000) { 
+		if (pts >= 1000 && pts <= 1500)
+		{
+			speedmod = 2;
+		}
+
+		if (pts > 1500) { 
 		 speedmod = 1; 
 		}
 		
-		cout_point(pts,name);
+		cout_point(pts,player[readcount].playername);
+		scoreboard();
 		Sleep(100);
 		frame++;
 	}
 
 	system("cls");
 	gotoxy(34, 4);printf("GAME OVER\n\n");
-	gotoxy(30, 7);printf("Name : "); cout << name;
+	gotoxy(30, 7);printf("Name : "); cout << player[readcount].playername;
 	gotoxy(30, 8);printf("Total score : %d\n\n\n\n", pts);
 	player[readcount].playerscore = pts;
 	writefile();
+	Sleep(200000);
 
 	return 0;
 }
